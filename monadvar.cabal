@@ -4,6 +4,7 @@ license:   MIT
 license-file: LICENSE
 author:    Alistair Lynn
 maintainer: Alistair Lynn <arplynn@gmail.com>
+stability: experimental
 category:  Control
 synopsis:  A monad class for monads with mutable variables
 description:
