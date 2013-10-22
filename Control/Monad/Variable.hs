@@ -7,6 +7,8 @@ import qualified Control.Concurrent.STM as STM
 
 import Data.IORef
 
+import qualified Control.Monad.ST.Lazy as STLazy
+import qualified Data.STRef.Lazy as STLazyRef
 import qualified Control.Monad.ST.Strict as STStrict
 import qualified Data.STRef.Strict as STStrictRef
 
@@ -48,6 +50,12 @@ instance MonadVariable IO where
     var <- newIORef x
     return Variable { get = readIORef var,
                       set = writeIORef var }
+
+instance MonadVariable (STLazy.ST s) where
+  newVar x = do
+    var <- STLazyRef.newSTRef x
+    return Variable { get = STLazyRef.readSTRef var,
+                      set = STLazyRef.writeSTRef var }
 
 instance MonadVariable (STStrict.ST s) where
   newVar x = do
