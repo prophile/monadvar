@@ -32,14 +32,14 @@ liftVar = lift . liftM liftV . newVar
 instance MonadVariable STM.STM where
   newVar x = do
     var <- STM.newTVar x
-    return $ Variable { get = STM.readTVar var,
-                        set = STM.writeTVar var }
+    return Variable { get = STM.readTVar var,
+                      set = STM.writeTVar var }
 
 instance MonadVariable IO where
   newVar x = do
     var <- newIORef x
-    return $ Variable { get = readIORef var,
-                        set = writeIORef var }
+    return Variable { get = readIORef var,
+                      set = writeIORef var }
 
 -- TODO: write one for ST
 
