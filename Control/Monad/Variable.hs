@@ -1,7 +1,15 @@
+{-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module Control.Monad.Variable(Variable, get, set, newVar, liftVar, MonadVariable) where
 
 import qualified Control.Concurrent.STM as STM
+
 import Data.IORef
+
+import qualified Control.Monad.ST.Strict as STStrict
+import qualified Data.STRef.Strict as STStrictRef
+
 import Control.Monad.Trans
 import Control.Monad(liftM)
 
@@ -41,7 +49,11 @@ instance MonadVariable IO where
     return Variable { get = readIORef var,
                       set = writeIORef var }
 
--- TODO: write one for ST
+instance MonadVariable (STStrict.ST s) where
+  newVar x = do
+    var <- STStrictRef.newSTRef x
+    return Variable { get = STStrictRef.readSTRef var,
+                      set = STStrictRef.writeSTRef var }
 
 instance (MonadVariable m) => MonadVariable (ReaderT r m) where
   newVar = liftVar
